@@ -11,10 +11,19 @@ li {
 }
 
 /* Temporary styling */
-.container {
+/* .container {
     border: 1px solid red;
-}
+} */
 /* Temporary styling ^^ */
+
+.profile-picture {
+    border-radius: 100%;
+    height: 36px;
+}
+
+.profile-picture.large {
+    height: 42px; /* Example of targeting the img element with both classes */
+}
 
 .container {
     display: grid;
@@ -34,12 +43,22 @@ li {
 
     .title {
         font-size: larger;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
     }
 
     ul {
         padding-left:0.5em;
         li {
             padding-top: 1em;
+            display: flex;
+            align-items: center;
+            gap: 1em;
+
+            path {
+                fill: #eaeaea !important;  /* Change the color of the SVG */
+            }
         }
     }
 }
@@ -73,9 +92,15 @@ li {
         justify-content: right;
         gap: 1em;
         padding-right: 2em;
-        
+        padding-top: 0.5em;
+
+        > * {
+            padding:  0;
+        }
+
         .profile-name {
             font-weight: bold;
+            font-size: smaller;
         }
     }
 
@@ -104,13 +129,14 @@ li {
             padding-right: 2em;;
             gap: 1em;
             justify-content: space-between;
-            font-weight: bold;
-            color: #eaeaea;
+            font-weight:600;
+            font-size: smaller;
+            color: white;
             li {
                 background-color: var(--background-color);
                 padding: 0.5em;
                 cursor: pointer;
-                border-radius: 1em;
+                border-radius: 1.5em;
                 flex-grow: 1;
                 display: flex;
                 justify-content: center;
@@ -140,6 +166,7 @@ li {
 
     .divider {
         max-height: 1px;
+        min-height: 1px;
         background-color: #eaeaea;
     }
 
@@ -165,6 +192,7 @@ li {
                 display: flex;
                 flex-direction: column;
                 padding: 1em;
+                padding-bottom: 0;
                 justify-content: space-between;
 
                 .project-card-header {
@@ -211,6 +239,10 @@ li {
             .trending-profile {
                 display: flex;
                 flex-direction: column;
+
+                .trending-profile-name {
+                    font-weight: 600;
+                }
             }
         }
     }
