@@ -23,21 +23,22 @@ function buildGrid(dimension, isLoad) {
 
 	if (!isLoad) {
 		const url = new URL(window.location);
-		url.searchParams.delete("gridState");
-		window.history.replaceState(null, "", url.toString());
+		url.searchParams.delete('gridState');
+		window.history.replaceState(null, '', url.toString());
 	}
+	
 }
 
 function loadGridFromState(gridState) {
-	const gridItems = document.querySelectorAll(".grid-item");
-	gridItems.forEach((item, index) => {
-		item.style.backgroundColor = gridState[index];
-	});
+    const gridItems = document.querySelectorAll(".grid-item");
+    gridItems.forEach((item, index) => {
+        item.style.backgroundColor = gridState[index];
+    });
 }
 
 function getGridState() {
-	const gridItems = document.querySelectorAll(".grid-item");
-	return Array.from(gridItems).map((item) => item.style.backgroundColor);
+    const gridItems = document.querySelectorAll(".grid-item");
+    return Array.from(gridItems).map(item => item.style.backgroundColor);
 }
 
 function encodeGridState(gridState) {
@@ -51,20 +52,20 @@ function decodeGridState(encodedState) {
 }
 
 function saveGridStateToURL() {
-	const gridState = getGridState();
-	const encodedState = encodeGridState(gridState);
-	const url = new URL(window.location);
-	url.searchParams.set("gridState", encodedState);
-	window.history.replaceState(null, "", url.toString());
+    const gridState = getGridState();
+    const encodedState = encodeGridState(gridState);
+    const url = new URL(window.location);
+    url.searchParams.set('gridState', encodedState);
+    window.history.replaceState(null, '', url.toString());
 }
 
 function loadGridStateFromURL() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const encodedState = urlParams.get("gridState");
-	if (encodedState) {
-		const gridState = decodeGridState(encodedState);
-		loadGridFromState(gridState);
-	}
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedState = urlParams.get('gridState');
+    if (encodedState) {
+        const gridState = decodeGridState(encodedState);
+        loadGridFromState(gridState);
+    }
 }
 
 buildGrid(dimension, true);
@@ -122,15 +123,23 @@ colorPicker.addEventListener("input", (event) => {
 	color = event.target.value;
 });
 
-document.querySelector("#share").addEventListener("click", () => {
-	saveGridStateToURL(); // Ensure the URL is updated with the latest grid state
-	const longURL = window.location.href;
-	try {
-		navigator.clipboard.writeText(longURL);
-        alert('URL copied to clipboard!');
-	} catch (error) {
-		alert("Failed to copy URL. Please try again.");
-	}
+document.querySelector("#save").addEventListener("click", () => {
+	const gridItems = document.querySelectorAll(".grid-item");
+	const gridItemDimension = container.clientWidth / dimension;
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	gridItems.forEach((item, index) => {
+			const x = (index % dimension) * gridItemDimension;
+			const y = Math.floor(index / dimension) * gridItemDimension;
+			ctx.fillStyle = item.style.backgroundColor || BACKGROUND_COLOR;
+			ctx.fillRect(x, y, gridItemDimension, gridItemDimension);
+	});
+
+	const link = document.createElement("a");
+	link.download = "canvas.jpg";
+	link.href = canvas.toDataURL("image/jpeg");
+	link.click();
 });
 
 window.addEventListener("load", loadGridStateFromURL);
