@@ -1,0 +1,28 @@
+
+:root {
+    --canvas-dimension: 75vw;
+    --ur: "mom";
+}
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 5em;
+    gap: 2em;
+}
+
+#container {
+    min-height: var(--canvas-dimension);
+    max-height: var(--canvas-dimension);
+    min-width: var(--canvas-dimension);
+    max-width: var(--canvas-dimension);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.grid-item {
+    background-color: gray;
+}
