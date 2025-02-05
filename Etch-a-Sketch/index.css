@@ -14,10 +14,10 @@ body {
 }
 
 #container {
-    min-height: var(--canvas-dimension);
-    max-height: var(--canvas-dimension);
-    min-width: var(--canvas-dimension);
-    max-width: var(--canvas-dimension);
+    height: var(--canvas-dimension);
+    max-height: 1000px;
+    width: var(--canvas-dimension);
+    max-width: 1000px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
