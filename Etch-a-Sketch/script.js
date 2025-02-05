@@ -41,11 +41,13 @@ function getGridState() {
 }
 
 function encodeGridState(gridState) {
-	return encodeURIComponent(JSON.stringify(gridState));
+	const compressedState = LZString.compressToEncodedURIComponent(JSON.stringify(gridState));
+    return compressedState;
 }
 
 function decodeGridState(encodedState) {
-	return JSON.parse(decodeURIComponent(encodedState));
+	const decompressedState = LZString.decompressFromEncodedURIComponent(encodedState);
+    return JSON.parse(decompressedState);
 }
 
 function saveGridStateToURL() {
