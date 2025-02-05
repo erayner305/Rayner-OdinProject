@@ -2,7 +2,7 @@ const root = document.documentElement;
 const container = document.querySelector("#container");
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
-let dimension = 16;
+let dimension = 100;
 let color = "#000000";
 const BACKGROUND_COLOR = "white";
 
@@ -69,13 +69,13 @@ function loadGridStateFromURL() {
 
 buildGrid(dimension, true);
 
-// let updateButton = document.querySelector("#submit_dimension");
-// updateButton.addEventListener("click", () => {
-// 	dimension = document.querySelector("#dimension").value;
-// 	if (dimension <= 24 && dimension > 0) {
-// 		buildGrid(dimension);
-// 	}
-// });
+let updateButton = document.querySelector("#submit_dimension");
+updateButton.addEventListener("click", () => {
+	dimension = document.querySelector("#dimension").value;
+	if (dimension <= 100 && dimension > 0) {
+		buildGrid(dimension);
+	}
+});
 
 let resetButton = document.querySelector("#reset");
 resetButton.addEventListener("click", () => buildGrid(dimension));
