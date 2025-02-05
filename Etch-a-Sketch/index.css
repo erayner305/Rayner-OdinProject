@@ -16,9 +16,9 @@ body {
 
 #container {
     height: var(--canvas-dimension);
-    max-height: 900px;
+    max-height: 850px;
     width: var(--canvas-dimension);
-    max-width: 900px;
+    max-width: 850px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
