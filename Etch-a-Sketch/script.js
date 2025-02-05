@@ -41,13 +41,16 @@ function getGridState() {
 }
 
 function encodeGridState(gridState) {
-	const compressedState = LZString.compressToEncodedURIComponent(JSON.stringify(gridState));
-    return compressedState;
+	const compressedState = LZString.compressToEncodedURIComponent(
+		JSON.stringify(gridState)
+	);
+	return compressedState;
 }
 
 function decodeGridState(encodedState) {
-	const decompressedState = LZString.decompressFromEncodedURIComponent(encodedState);
-    return JSON.parse(decompressedState);
+	const decompressedState =
+		LZString.decompressFromEncodedURIComponent(encodedState);
+	return JSON.parse(decompressedState);
 }
 
 function saveGridStateToURL() {
@@ -64,6 +67,32 @@ function loadGridStateFromURL() {
 	if (encodedState) {
 		const gridState = decodeGridState(encodedState);
 		loadGridFromState(gridState);
+	}
+}
+
+async function shortenURL(longURL) {
+	const accessToken = "691b7c378da8430ab0e8c9395b1ad78e10ed7e5e"; // Replace with your Bitly access token
+	try {
+		const response = await fetch("https://api-ssl.bitly.com/v4/shorten", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ long_url: longURL }),
+		});
+		if (!response.ok) {
+			const errorData = await response.json();
+			console.error("Error shortening URL:", errorData);
+			throw new Error(
+				`Error shortening URL: ${response.status} ${response.statusText}`
+			);
+		}
+		const data = await response.json();
+		return data.link;
+	} catch (error) {
+		console.error("Failed to shorten URL:", error);
+		throw error;
 	}
 }
 
@@ -122,14 +151,16 @@ colorPicker.addEventListener("input", (event) => {
 	color = event.target.value;
 });
 
-document.querySelector("#share").addEventListener("click", () => {
+document.querySelector("#share").addEventListener("click", async () => {
 	saveGridStateToURL(); // Ensure the URL is updated with the latest grid state
 	const longURL = window.location.href;
 	try {
-		navigator.clipboard.writeText(longURL);
-        alert('URL copied to clipboard!');
+		const shortURL = await shortenURL(longURL);
+		await navigator.clipboard.writeText(shortURL);
+		alert("Shortened URL copied to clipboard!");
 	} catch (error) {
-		alert("Failed to copy URL. Please try again.");
+		navigator.clipboard.writeText(longURL);
+		alert("Failed to shorten URL. Long URL copied to clipboard instead.");
 	}
 });
 
