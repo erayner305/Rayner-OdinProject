@@ -81,17 +81,12 @@ document.querySelector("#save").addEventListener("click", () => {
 	const gridItemDimension = container.clientWidth / dimension;
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = BACKGROUND_COLOR;
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	gridItems.forEach((item, index) => {
-		if (item.style.backgroundColor != BACKGROUND_COLOR) {
 			const x = (index % dimension) * gridItemDimension;
 			const y = Math.floor(index / dimension) * gridItemDimension;
-			console.log([x, y]);
 			ctx.fillStyle = item.style.backgroundColor || BACKGROUND_COLOR;
 			ctx.fillRect(x, y, gridItemDimension, gridItemDimension);
-		}
 	});
 
 	const link = document.createElement("a");
