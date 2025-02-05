@@ -4,10 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #game_results > * {
+            min-height: 1em;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
+    <div id="game_buttons">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button> 
+    </div>
     
-    <button type="button" onclick="playGame()">Play Game (5 rounds)</button>
+    <div id="game_results">
+        <p id="round_results"></p>
+        <p id="scoreboard"></p>
+
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
