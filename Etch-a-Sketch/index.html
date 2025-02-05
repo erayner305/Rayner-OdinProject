@@ -6,16 +6,24 @@
     <link rel="stylesheet" href="index.css">
     <script src="script.js" defer></script>
     <title>Etch-a-Sketch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="controls">
-        <input type="number" name="dimension" id="dimension" value="16" max="100" min="1">
-        <button id="submit_dimension">Update</button>
-
-    </div>
     <div id="container">
 
     </div>
-    <button id="reset">Reset</button>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <div id="controls">
+        <div class="dimension-input">
+            <label for="dimension">Dimension:</label>
+            <input type="number" name="dimension" id="dimension" value="16" max="100" min="1">
+            <button id="submit_dimension">Update</button>
+        </div>
+        
+        <input type="color" name="color" id="color">
+        <button id="reset">Reset Canvas</button>
+        <button id="save">Save as JPG (kinda broken, sorry)</button>
+        </div>
+       
 </body>
 </html>
