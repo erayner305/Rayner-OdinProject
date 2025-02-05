@@ -6,7 +6,7 @@ let dimension = 16;
 let color = "#000000";
 const BACKGROUND_COLOR = "white";
 
-function buildGrid(dimension) {
+function buildGrid(dimension, isLoad) {
 	container.innerHTML = "";
 	canvas.width = container.clientWidth;
 	canvas.height = container.clientHeight;
@@ -20,17 +20,61 @@ function buildGrid(dimension) {
 		gridItem.style.maxHeight = `${gridItemDimension}%`;
 		container.appendChild(gridItem);
 	}
+
+	if (!isLoad) {
+		const url = new URL(window.location);
+		url.searchParams.delete('gridState');
+		window.history.replaceState(null, '', url.toString());
+	}
+	
 }
 
-buildGrid(dimension);
+function loadGridFromState(gridState) {
+    const gridItems = document.querySelectorAll(".grid-item");
+    gridItems.forEach((item, index) => {
+        item.style.backgroundColor = gridState[index];
+    });
+}
 
-let updateButton = document.querySelector("#submit_dimension");
-updateButton.addEventListener("click", () => {
-	dimension = document.querySelector("#dimension").value;
-	if (dimension < 100 && dimension > 0) {
-		buildGrid(dimension);
-	}
-});
+function getGridState() {
+    const gridItems = document.querySelectorAll(".grid-item");
+    return Array.from(gridItems).map(item => item.style.backgroundColor);
+}
+
+function encodeGridState(gridState) {
+    return encodeURIComponent(JSON.stringify(gridState));
+}
+
+function decodeGridState(encodedState) {
+    return JSON.parse(decodeURIComponent(encodedState));
+}
+
+function saveGridStateToURL() {
+    const gridState = getGridState();
+    const encodedState = encodeGridState(gridState);
+    const url = new URL(window.location);
+    url.searchParams.set('gridState', encodedState);
+    window.history.replaceState(null, '', url.toString());
+}
+
+function loadGridStateFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedState = urlParams.get('gridState');
+    if (encodedState) {
+        const gridState = decodeGridState(encodedState);
+        loadGridFromState(gridState);
+    }
+}
+
+buildGrid(dimension, true);
+
+// let updateButton = document.querySelector("#submit_dimension");
+// updateButton.addEventListener("click", () => {
+// 	dimension = document.querySelector("#dimension").value;
+// 	if (dimension <= 24 && dimension > 0) {
+// 		buildGrid(dimension);
+// 	}
+// });
 
 let resetButton = document.querySelector("#reset");
 resetButton.addEventListener("click", () => buildGrid(dimension));
@@ -55,6 +99,7 @@ container.addEventListener("mousedown", (event) => {
 document.addEventListener("mouseup", () => {
 	isLeftMouseDown = false;
 	isRightMouseDown = false;
+	saveGridStateToURL();
 });
 
 container.addEventListener("mouseover", (event) => {
@@ -94,3 +139,5 @@ document.querySelector("#save").addEventListener("click", () => {
 	link.href = canvas.toDataURL("image/jpeg");
 	link.click();
 });
+
+window.addEventListener("load", loadGridStateFromURL);
