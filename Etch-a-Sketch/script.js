@@ -2,7 +2,8 @@ const root = document.documentElement;
 const container = document.querySelector("#container");
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
-let dimension = 100;
+const DEFAULT_DIMENSION = 16;
+let dimension = DEFAULT_DIMENSION;
 let color = "#000000";
 const BACKGROUND_COLOR = "white";
 
@@ -28,30 +29,44 @@ function buildGrid(dimension, isLoad) {
 	}
 }
 
-function loadGridFromState(gridState) {
+function loadGridFromState(state) {
+	console.log(state)
+	const { gridState, gridDimension } = state;
+	if (gridDimension) {
+		console.log(true)
+		dimension = gridDimension; 
+	}
+	console.log(dimension)
+	buildGrid(dimension, true);
 	const gridItems = document.querySelectorAll(".grid-item");
 	gridItems.forEach((item, index) => {
 		item.style.backgroundColor = gridState[index];
 	});
 }
 
-function getGridState() {
+function getGridState(gridDimension) {
 	const gridItems = document.querySelectorAll(".grid-item");
-	return Array.from(gridItems).map((item) => item.style.backgroundColor);
+	const gridState = Array.from(gridItems).map(
+		(item) => item.style.backgroundColor
+	);
+	return { gridState, gridDimension };
 }
 
 function encodeGridState(gridState) {
-	const compressedState = LZString.compressToEncodedURIComponent(JSON.stringify(gridState));
-    return compressedState;
+	const compressedState = LZString.compressToEncodedURIComponent(
+		JSON.stringify(gridState)
+	);
+	return compressedState;
 }
 
 function decodeGridState(encodedState) {
-	const decompressedState = LZString.decompressFromEncodedURIComponent(encodedState);
-    return JSON.parse(decompressedState);
+	const decompressedState =
+		LZString.decompressFromEncodedURIComponent(encodedState);
+	return JSON.parse(decompressedState);
 }
 
-function saveGridStateToURL() {
-	const gridState = getGridState();
+function saveGridStateToURL(gridDimension) {
+	const gridState = getGridState(gridDimension);
 	const encodedState = encodeGridState(gridState);
 	const url = new URL(window.location);
 	url.searchParams.set("gridState", encodedState);
@@ -64,10 +79,12 @@ function loadGridStateFromURL() {
 	if (encodedState) {
 		const gridState = decodeGridState(encodedState);
 		loadGridFromState(gridState);
+	} else {
+		buildGrid(dimension, true)
 	}
 }
 
-buildGrid(dimension, true);
+// buildGrid(dimension, true);
 
 let updateButton = document.querySelector("#submit_dimension");
 updateButton.addEventListener("click", () => {
@@ -100,7 +117,7 @@ container.addEventListener("mousedown", (event) => {
 document.addEventListener("mouseup", () => {
 	isLeftMouseDown = false;
 	isRightMouseDown = false;
-	saveGridStateToURL();
+	saveGridStateToURL(dimension);
 });
 
 container.addEventListener("mouseover", (event) => {
@@ -123,11 +140,11 @@ colorPicker.addEventListener("input", (event) => {
 });
 
 document.querySelector("#share").addEventListener("click", () => {
-	saveGridStateToURL(); // Ensure the URL is updated with the latest grid state
+	saveGridStateToURL(dimension); // Ensure the URL is updated with the latest grid state
 	const longURL = window.location.href;
 	try {
 		navigator.clipboard.writeText(longURL);
-        alert('URL copied to clipboard!');
+		alert("URL copied to clipboard!");
 	} catch (error) {
 		alert("Failed to copy URL. Please try again.");
 	}
