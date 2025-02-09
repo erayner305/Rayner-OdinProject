@@ -1,0 +1,83 @@
+:root {
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+.container {
+    background-color: darkgray;
+    display: grid;
+    grid-template-rows: 1fr 4fr;
+    padding: 0.5em;
+    font-size: x-large;
+
+    #display {
+        max-width: 200px;
+        background-color: white;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        padding-right: 0.5em;
+        padding-right: 0.5em;
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    #buttons {
+        display: grid;
+        grid-template-rows: 1fr 10fr;
+        grid-template-columns: minmax(150px, 3fr) 1fr;
+        padding: 0.5em;
+
+        #button_clear {
+            margin: 0.2em;
+            grid-column: 2;
+            font-size: x-small;
+            background-color: lightcoral;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #functions {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            > * {
+                background-color: coral;
+                margin: 0.1em;
+            }
+            
+
+
+
+            #button_enter {
+                flex-grow: 1;
+            }
+        }
+
+        #numbers {
+            display: grid;
+            grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+            text-align: center;
+            align-items: center;
+            > * {
+                background-color: white;
+                padding: 0.1em;
+                margin: 0.1em;
+            }
+            
+            #button_0 {
+                grid-column: span 2;
+            }
+        }
+
+        [id^="button_"] {
+            cursor: pointer;
+        }
+    }
+}
