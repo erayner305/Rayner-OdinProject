@@ -1,0 +1,24 @@
+.library {
+    display: grid;
+
+    > * {
+        display: grid;
+        grid-template-columns: repeat(4, 4fr) 1fr;
+        > * {
+            border: 1px solid gray;
+        }
+
+        .status {
+            cursor: pointer;
+        }
+
+        .delete-book {
+            cursor: pointer;
+        }
+    }
+
+    .column-headers > * {
+        background-color: lightgray;
+        
+    }
+}
