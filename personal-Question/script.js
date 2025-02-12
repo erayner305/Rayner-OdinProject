@@ -18,6 +18,10 @@ function updateChat(newChatID) {
     })
 }
 
+function dodge(selectedButton) {
+    selectedButton.style.transform = `translateY(${Math.random() * 300}px)`; // Move the button down by 50px
+}
+
 responseButtonsElem.addEventListener("click", (event) => {
     let selectedButton = event.target;
     if (selectedButton.classList.contains("response-button")) {
@@ -25,9 +29,19 @@ responseButtonsElem.addEventListener("click", (event) => {
         if (newChatID != -1) {
             updateChat(newChatID);
         } else {
-            selectedButton.style.transform = `translateY(${Math.random() * 300}px)`; // Move the button down by 50px
+            dodge(selectedButton);
         }
         
+    }
+})
+
+responseButtonsElem.addEventListener("mouseover", (event) => {
+    let selectedButton = event.target;
+    if (selectedButton.classList.contains("response-button")) {
+        newChatID = selectedButton.getAttribute("data-attribute");
+        if (newChatID == -1) {
+            dodge(selectedButton);
+        }
     }
 })
 
