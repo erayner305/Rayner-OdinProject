@@ -47,9 +47,9 @@ let gameController = function (player1name, player2name) {
 		const replaceCell = (player, [cellRow, cellColumn]) => {
 			if (board[cellRow][cellColumn] == " ") {
 				board[cellRow][cellColumn] = player.getSymbol();
-				return true;
+				return player.getSymbol();
 			} else {
-				return false;
+				return "";
 			}
 		};
 		return { getBoard, reset, replaceCell };
@@ -57,34 +57,38 @@ let gameController = function (player1name, player2name) {
 
 	const playRound = () => {
 		console.log(`${currentPlayer.getName()}'s Turn!`);
-		return gameBoard.getBoard().forEach((row) => {
+		gameBoard.getBoard().forEach((row) => {
 			console.log(row);
 		});
+		return currentPlayer.getSymbol();
 	};
 
 	const getCurrentPlayer = () => currentPlayer.getName();
 	const getcurrentRound = () => currentRound;
 
 	const chooseCell = (cellRow, cellColumn) => {
-		let success = gameBoard.replaceCell(currentPlayer, [cellRow, cellColumn]);
-		if (success) {
+		let symbol = gameBoard.replaceCell(currentPlayer, [cellRow, cellColumn]);
+		if (symbol != " ") {
 			currentRound++;
 			if (currentRound <= 9) {
 				// No need to check before this since it's impossible
 				if (currentRound >= 6) {
 					if (checkWinCondition()) {
 						currentPlayer.incrementScore();
-						console.log(`${currentPlayer.getName()} Wins! Score is ${player1.getScore()} to ${player2.getScore()}`);
+						console.log(
+							`${currentPlayer.getName()} Wins! Score is ${player1.getScore()} to ${player2.getScore()}`
+						);
 						return startGame();
 					}
 				}
 				currentPlayer = currentRound % 2 == 0 ? player2 : player1;
-				return playRound();
+				playRound();
+				return symbol;
 			} else {
 				return `Game Over! Tie!`;
 			}
 		} else {
-			return "That space is invalid! Try Again!";
+			return "";
 		}
 	};
 
@@ -109,9 +113,12 @@ let gameController = function (player1name, player2name) {
 			[board[0][0], board[1][1], board[2][2]],
 			[board[0][2], board[1][1], board[2][0]],
 		];
-	
-		return winningCombinations.some(combination => {
-			return combination.every(cell => cell === "X") || combination.every(cell => cell === "O");
+
+		return winningCombinations.some((combination) => {
+			return (
+				combination.every((cell) => cell === "X") ||
+				combination.every((cell) => cell === "O")
+			);
 		});
 	};
 
@@ -147,6 +154,49 @@ let gameController = function (player1name, player2name) {
 	};
 };
 
-let displayController = (function () {
-	return {};
-})();
+let displayController = function (gameInstance) {
+	let gameBoardElem = document.querySelector(".game-board");
+	gameBoardElem.getAttr;
+	const createBoard = (function () {
+		for (let i = 0; i < 3; i++) {
+			for (let j = 0; j < 3; j++) {
+				let cell = document.createElement("div");
+				cell.setAttribute("class", "cell");
+				cell.setAttribute("data-cell-x", i);
+				cell.setAttribute("data-cell-y", j);
+
+				gameBoardElem.appendChild(cell);
+			}
+		}
+	})();
+
+	gameBoardElem.addEventListener("click", (event) => {
+		let cellElem = event.target;
+
+		if (cellElem.textContent == "") {
+			let cellPosition = {
+				x: cellElem.getAttribute("data-cell-x"),
+				y: cellElem.getAttribute("data-cell-y"),
+			};
+
+			let symbol = gameInstance.chooseCell(cellPosition.x, cellPosition.y);
+			console.log(symbol);
+			cellElem.textContent = symbol;
+		}
+	});
+	return { createBoard };
+};
+
+let gameControllsElem = document.querySelector(".game-controls");
+let startButton = gameControllsElem.querySelector("#start_game");
+
+startButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	gameControllsElem.close();
+	let player1name =
+		startButton.parentNode.parentNode.querySelector("#player1").value;
+	let player2name =
+		startButton.parentNode.parentNode.querySelector("#player2").value;
+	let game = gameController(player1name, player2name);
+	let display = displayController(game);
+});
