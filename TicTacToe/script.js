@@ -25,6 +25,9 @@ let gameController = function (player1name, player2name) {
 		return { getSymbol, getName, getScore, incrementScore };
 	};
 
+	let player1 = player(PLAYER_1_SYMBOL, player1name || "Player 1");
+	let player2 = player(PLAYER_2_SYMBOL, player2name || "Player 2");
+
 	/**
 	 * gameBoard represents the state of the board
 	 * Each entry in the board array represents a cell
@@ -38,18 +41,18 @@ let gameController = function (player1name, player2name) {
 			[" ", " ", " "],
 		];
 
-		let board = [...blankBoard];
+		let board = JSON.parse(JSON.stringify(blankBoard));
 
 		const getBoard = () => board;
 		const reset = () => {
-			board = [...blankBoard];
+			board = JSON.parse(JSON.stringify(blankBoard));
 		};
 		const replaceCell = (player, [cellRow, cellColumn]) => {
 			if (board[cellRow][cellColumn] == " ") {
 				board[cellRow][cellColumn] = player.getSymbol();
-				return player.getSymbol();
+				return true;
 			} else {
-				return "";
+				return false;
 			}
 		};
 		return { getBoard, reset, replaceCell };
@@ -64,11 +67,18 @@ let gameController = function (player1name, player2name) {
 	};
 
 	const getCurrentPlayer = () => currentPlayer.getName();
-	const getcurrentRound = () => currentRound;
+	const getCurrentRound = () => currentRound;
+	const getPlayers = () => [player1, player2];
 
 	const chooseCell = (cellRow, cellColumn) => {
-		let symbol = gameBoard.replaceCell(currentPlayer, [cellRow, cellColumn]);
-		if (symbol != " ") {
+		let gameState = {
+			symbol: currentPlayer.getSymbol(),
+			isGameOver: false,
+			winner: null,
+		};
+
+		let success = gameBoard.replaceCell(currentPlayer, [cellRow, cellColumn]);
+		if (success) {
 			currentRound++;
 			if (currentRound <= 9) {
 				// No need to check before this since it's impossible
@@ -78,24 +88,32 @@ let gameController = function (player1name, player2name) {
 						console.log(
 							`${currentPlayer.getName()} Wins! Score is ${player1.getScore()} to ${player2.getScore()}`
 						);
-						return startGame();
+						gameState.isGameOver = true;
+						gameState.winner = currentPlayer.getName();
+						return gameState;
 					}
 				}
 				currentPlayer = currentRound % 2 == 0 ? player2 : player1;
 				playRound();
-				return symbol;
+				return gameState;
 			} else {
-				return `Game Over! Tie!`;
+				if (checkWinCondition()) {
+					currentPlayer.incrementScore();
+					gameState.winner = currentPlayer.getName();
+				}
+
+				gameState.isGameOver = true;
+				return gameState;
 			}
 		} else {
-			return "";
+			gameState.symbol = "";
+			return gameState;
 		}
 	};
 
 	const resetGame = () => {
 		gameBoard.reset();
-		player1 = player2 = currentPlayer = currentRound = undefined;
-		currentRound;
+		startGame();
 	};
 
 	const checkWinCondition = () => {
@@ -131,9 +149,6 @@ let gameController = function (player1name, player2name) {
 		);
 	};
 
-	let player1 = player(PLAYER_1_SYMBOL, player1name || "Player 1");
-	let player2 = player(PLAYER_2_SYMBOL, player2name || "Player 2");
-
 	const startGame = () => {
 		currentPlayer = player1;
 		currentRound = 1;
@@ -147,17 +162,21 @@ let gameController = function (player1name, player2name) {
 
 	return {
 		getCurrentPlayer,
-		getcurrentRound,
+		getCurrentRound,
+		getPlayers,
 		chooseCell,
 		resetGame,
 		help,
 	};
 };
 
-let displayController = function (gameInstance) {
+let displayController = function () {
 	let gameBoardElem = document.querySelector(".game-board");
-	gameBoardElem.getAttr;
-	const createBoard = (function () {
+	let gameInstance;
+
+	const createBoard = function (localGameInstance) {
+		gameInstance = gameInstance || localGameInstance;
+		gameBoardElem.innerHTML = "";
 		for (let i = 0; i < 3; i++) {
 			for (let j = 0; j < 3; j++) {
 				let cell = document.createElement("div");
@@ -168,24 +187,40 @@ let displayController = function (gameInstance) {
 				gameBoardElem.appendChild(cell);
 			}
 		}
-	})();
 
-	gameBoardElem.addEventListener("click", (event) => {
-		let cellElem = event.target;
+		gameBoardElem.addEventListener("click", (event) => {
+			let cellElem = event.target;
 
-		if (cellElem.textContent == "") {
-			let cellPosition = {
-				x: cellElem.getAttribute("data-cell-x"),
-				y: cellElem.getAttribute("data-cell-y"),
-			};
+			if (cellElem.textContent == "") {
+				let cellPosition = {
+					x: cellElem.getAttribute("data-cell-x"),
+					y: cellElem.getAttribute("data-cell-y"),
+				};
 
-			let symbol = gameInstance.chooseCell(cellPosition.x, cellPosition.y);
-			console.log(symbol);
-			cellElem.textContent = symbol;
-		}
-	});
+				let gameState = gameInstance.chooseCell(cellPosition.x, cellPosition.y);
+				cellElem.textContent = gameState.symbol;
+				if (gameState.isGameOver) {
+					let scoreboardElem = document.querySelector(".game-over-controls");
+					let winnerElem = scoreboardElem.querySelector("[data-winner]");
+					let scoreElem = scoreboardElem.querySelector("[data-score]");
+					let playersElem = scoreboardElem.querySelector("[data-players]");
+
+					let players = gameInstance.getPlayers();
+					winnerElem.textContent =
+						gameState.winner != null ? `${gameState.winner} Wins!` : `Tie!`;
+					scoreElem.textContent = `${players[0].getScore()} - ${players[1].getScore()}`;
+					playersElem.textContent = `${players[0].getName()} ${players[1].getName()}`;
+					gameInstance.resetGame();
+					scoreboardElem.showModal();
+				}
+			}
+		});
+	};
+
 	return { createBoard };
 };
+
+let display = displayController();
 
 let gameControllsElem = document.querySelector(".game-controls");
 let startButton = gameControllsElem.querySelector("#start_game");
@@ -198,5 +233,15 @@ startButton.addEventListener("click", (event) => {
 	let player2name =
 		startButton.parentNode.parentNode.querySelector("#player2").value;
 	let game = gameController(player1name, player2name);
-	let display = displayController(game);
+	display.createBoard(game);
+});
+
+let gameOverControllsElem = document.querySelector(".game-over-controls");
+let resetButton = gameOverControllsElem.querySelector("#reset_game");
+
+resetButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	gameOverControllsElem.close();
+
+	display.createBoard();
 });

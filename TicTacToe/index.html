@@ -14,12 +14,19 @@
 			<dialog class="game-controls" open>
 				<input type="text" id="player1" placeholder="Player 1" />
 				<input type="text" id="player2" placeholder="Player 2" />
-                <div class="game-buttons">
-                    <button type="button" id="start_game">Start Game</button>
-                </div>
-            </dialog>
-			<div class="game-board">
-            </div>
+				<div class="game-buttons">
+					<button type="button" id="start_game">Start Game</button>
+				</div>
+			</dialog>
+			<dialog class="game-over-controls">
+				<div data-winner>%player% Wins!</div>
+				<div data-score>0 - 0</div>
+				<div data-players>%player1% %player2%</div>
+				<div class="game-buttons">
+					<button type="button" id="reset_game">Reset Game</button>
+				</div>
+			</dialog>
+			<div class="game-board"></div>
 		</div>
 	</body>
 </html>
