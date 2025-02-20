@@ -1,20 +1,23 @@
 const myLibrary = [];
 
-function Book(title, author, pages, isRead) {
-	this.title = title || "";
-	this.author = author || "";
-	this.pages = pages || 0;
-	this.isRead = isRead || false;
-	this.info = () => {
+class Book {
+	constructor(title, author, pages, isRead) {
+		this.title = title || "";
+		this.author = author || "";
+		this.pages = pages || 0;
+		this.isRead = isRead || false;
+	}
+
+	get info() {
 		return `${this.title} by ${this.author}, ${pages} pages, ${
 			this.isRead ? "read" : "not read yet"
 		}`;
+	}
+
+	toggleReadStatus = () => {
+		this.isRead = !this.isRead;
 	};
 }
-
-Book.prototype.toggleReadStatus = () => {
-	this.isRead = !this.isRead;
-};
 
 function addBookToLibrary(book) {
 	myLibrary.push(book);
@@ -56,7 +59,7 @@ function addBookToLibraryTable(book, id) {
 
 	const bookDeleteElement = document.createElement("div");
 	const bookDeleteButton = document.createElement("button");
-	bookDeleteButton.textContent = "Remove"
+	bookDeleteButton.textContent = "Remove";
 	bookDeleteButton.setAttribute("class", "delete-book");
 
 	bookDeleteButton.addEventListener("click", (event) => {
@@ -65,7 +68,7 @@ function addBookToLibraryTable(book, id) {
 		removeBookFromLibrary(bookIndex);
 		populateLibraryTable(myLibrary);
 		console.log(myLibrary);
-	})
+	});
 
 	bookDeleteElement.append(bookDeleteButton);
 
