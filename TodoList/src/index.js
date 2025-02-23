@@ -10,3 +10,11 @@ console.log(exampleTodoList);
 exampleTodoList.removeTodoItem(0);
 
 console.log(exampleTodoList);
+
+function buildTodoList() {
+
+}
+
+function buildTodoItem() {
+    
+}
