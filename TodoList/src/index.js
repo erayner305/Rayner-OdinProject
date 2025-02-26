@@ -1,7 +1,5 @@
 import "./style.css";
 
-import TodoItem from "./modules/todoItem";
-import TodoList from "./modules/TodoList";
 import TodoManager from "./modules/TodoManager";
 import DOMManager from "./modules/DOMManager";
 
