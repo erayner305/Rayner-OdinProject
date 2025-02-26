@@ -6,6 +6,46 @@
 		<title>Todo List</title>
 	</head>
 	<body>
+		<dialog class="modal" id="list_modal">
+			<h3>Todo List</h3>
+			<div class="field-input">
+				<label for="list-title">TITLE</label>
+				<input type="text" name="list-title" id="list-title" />
+			</div>
+			<div class="buttons">
+				<button class="field-button" id="modal-cancel">Cancel</button>
+				<button class="field-button" id="list-create">Create</button>
+			</div>
+		</dialog>
+		<dialog class="modal" id="item_modal">
+			<h3>Todo Item</h3>
+			<div class="field-input">
+				<label for="item-title">TITLE</label>
+				<input type="text" name="item-title" id="item-title" />
+			</div>
+			<div class="field-input">
+				<label for="item-description">DESCRIPTION</label>
+				<input type="text" name="item-description" id="item-description" />
+			</div>
+			<div class="field-input">
+				<label for="item-dueDate">DUE DATE</label>
+				<input type="date" name="item-dueDate" id="item-dueDate" />
+			</div>
+			<div class="field-input">
+				<label for="item-priority">PRIORITY</label>
+				<select name="item-priority" id="item-priority">
+					<option value="0">None</option>
+					<option value="1">1 - Low</option>
+					<option value="2">2 - Medium</option>
+					<option value="3">3 - High</option>
+				</select>
+			</div>
+			<div class="buttons">
+				<button class="field-button" id="modal-cancel">Cancel</button>
+				<button class="field-button" id="item-create">Create</button>
+			</div>
+		</dialog>
+
 		<div id="todo_wrapper">
 			<div id="todo_list">
 				<div id="todo_list__header">
@@ -47,8 +87,8 @@
 						<select name="lists" id="list_selector">
 							<option value="">Select Todo List</option>
 							<option value="-1">Add New List</option>
-							<optgroup>
-								<option value="0">Default List</option>
+							<optgroup id="select_lists">
+								
 							</optgroup>
 						</select>
 					</div>

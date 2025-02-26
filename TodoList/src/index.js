@@ -2,19 +2,25 @@ import "./style.css";
 
 import TodoItem from "./modules/todoItem";
 import TodoList from "./modules/TodoList";
+import TodoManager from "./modules/TodoManager";
+import DOMManager from "./modules/DOMManager";
 
 import exampleTodoList from "./testing/todoExamples";
 
-console.log(exampleTodoList);
+class App {
+    constructor() {
+        this.loadInitialData();
+    }
 
-exampleTodoList.removeTodoItem(0);
+	loadInitialData() {
+        let localLists = null; // localStorage.getItem(lists)
+        this.todoManager = new TodoManager(exampleTodoList);
+        this.domManager = new DOMManager();
+    }
 
-console.log(exampleTodoList);
-
-function buildTodoList() {
-
+	bindGlobalEvents() {
+    }
 }
 
-function buildTodoItem() {
-    
-}
+let app = new App();
+console.log(app.todoManager);

@@ -1,16 +1,32 @@
+import TodoItem from "./todoItem";
+
 export default class TodoList {
-	constructor(title) {
+	/**
+	 *
+	 * @param {number} id
+	 * @param {String} title
+	 */
+	constructor(id, title) {
+		this.id = id;
 		this.title = title;
-		this.todoList = [];
+		this.items = [];
 	}
 
-	addTodoItem(todoItem) {
-		this.todoList.push(todoItem);
+	addItem(id, title, description, dueDate, priority) {
+		let newItem = new TodoItem(id, title, description, dueDate, priority);
+		this.items.push(newItem);
+		return true;
 	}
 
-    removeTodoItem(todoItemID) {
-        this.todoList = this.todoList.filter((todo) => {
-            return todo.id != todoItemID
-        })
-    }
+	deleteItem(targetItemID) {
+		const initialLength = this.items.length;
+		this.items = this.items.filter((todo) => {
+			return todo.id != targetItemID;
+		});
+		return this.items.length < initialLength;
+	}
+
+	updateTitle(newTitle) {
+		this.title = newTitle;
+	}
 }
