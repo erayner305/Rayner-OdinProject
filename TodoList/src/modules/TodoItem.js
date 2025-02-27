@@ -1,3 +1,5 @@
+import {v4 as uuidv4} from 'uuid';
+
 export default class TodoItem {
     /**
      * 
@@ -7,8 +9,8 @@ export default class TodoItem {
      * @param {Date} dueDate 
      * @param {number} priority 
      */
-	constructor(id, title, description, dueDate, priority) {
-		this.id = id;
+	constructor(title, description, dueDate, priority, id) {
+		this.id = id || uuidv4();
 		this.title = title;
 		this.description = description || "";
 		this.dueDate = dueDate || "";

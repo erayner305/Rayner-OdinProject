@@ -11,5 +11,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack serve"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
   }
 }

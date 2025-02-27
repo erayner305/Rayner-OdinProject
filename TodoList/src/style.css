@@ -118,7 +118,7 @@ body {
 			align-items: top;
 			grid-template-columns: 3em 70% 22%;
 
-			&.todo-list__add-button {
+			&#todo-list__add-button {
 				height: 2em;
 				background-color: rgb(144, 238, 144);
 				border-top-left-radius: 10px;
