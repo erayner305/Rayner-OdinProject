@@ -50,7 +50,7 @@
 			<div id="todo_list">
 				<div id="todo_list__header">
 					<div id="todo_list__title">
-						<h1 id="todo_list__title_list">Default List</h1>
+						<h1 id="todo_list__title_list" data-list-id="-1"></h1>
 						<div>
 							<button>
 								<svg
@@ -85,7 +85,7 @@
 
 					<div id="todo_list__controls">
 						<select name="lists" id="list_selector">
-							<option value="">Select Todo List</option>
+							<option value="0">Select Todo List</option>
 							<option value="-1">Add New List</option>
 							<optgroup id="select_lists">
 								
@@ -109,26 +109,6 @@
 								d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 							/>
 						</svg>
-					</li>
-					<li class="todo-list__item">
-						<div class="todo-item__isChecked">
-							<input type="checkbox" name="completed" id="0_completed" />
-						</div>
-						<div class="todo-item__title">Buy groceries</div>
-						<div class="todo-item__dueDate">2023-10-01</div>
-						<div class="todo-item__description">Buy milk, eggs, and bread</div>
-						<div class="todo-item__priority">High</div>
-					</li>
-					<li class="todo-list__item">
-						<div class="todo-item__isChecked">
-							<input type="checkbox" name="completed" id="1_completed" />
-						</div>
-						<div class="todo-item__title">Walk the dog</div>
-						<div class="todo-item__dueDate">2023-10-02</div>
-						<div class="todo-item__description">
-							Take the dog for a walk in the park
-						</div>
-						<div class="todo-item__priority">Medium</div>
 					</li>
 				</ul>
 			</div>

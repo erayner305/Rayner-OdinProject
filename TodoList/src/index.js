@@ -11,7 +11,6 @@ class App {
     }
 
 	loadInitialData() {
-        let localLists = null; // localStorage.getItem(lists)
         this.todoManager = new TodoManager();
         // this.todoManager.addList(exampleTodoList[0]);
         // this.todoManager.addList(exampleTodoList[1]);

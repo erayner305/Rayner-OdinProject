@@ -6,7 +6,30 @@ export default class TodoManager {
 		let localLists = this.loadListsFromLocalStorage();
 		// If locaLists is not found in localStorage, it will be null
 		// So - not positive this will work
-		this.lists = localLists || [];
+		this.lists = localLists || []; 
+		this._currentListID = this.loadCurrentListIDFromLocalStorage();
+	}
+
+	set currentListID(id) {
+		this._currentListID = id;
+		this.saveCurrentListIDToLocalStorage();
+	}
+
+	get currentListID() {
+		return this._currentListID;
+	}
+
+	findList(id) {
+		let list = this.lists.find((list) => {
+			return list.id == id;
+		})
+
+		if (list) {
+			return list
+		} else {
+			console.error(`List "${id}" not found!`)
+			return undefined;
+		}
 	}
 
 	addList(title, id) {
@@ -34,8 +57,17 @@ export default class TodoManager {
 		localStorage.setItem("todoLists", JSON.stringify(this.lists));
 	}
 
+	saveCurrentListIDToLocalStorage() {
+		localStorage.setItem("currentTodoList", JSON.stringify(this.currentListID));
+	}
+
 	loadListsFromLocalStorage() {
 		const lists = localStorage.getItem("todoLists");
 		return lists ? JSON.parse(lists) : [];
+	}
+
+	loadCurrentListIDFromLocalStorage() {
+		const currentListID = localStorage.getItem("currentTodoList");
+		return currentListID ? JSON.parse(currentListID) : 0;
 	}
 }
