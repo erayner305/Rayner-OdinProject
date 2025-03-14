@@ -13,7 +13,7 @@ const Mode = {
 export default class DOMManager {
 	constructor(todoManager) {
 		this.todoManager = todoManager;
-        this.renderTodoList(todoManager.findList(todoManager.currentListID));
+		this.renderTodoList(todoManager.findList(todoManager.currentListID));
 		this.bindEvents();
 		this.updateListSelector();
 	}
@@ -55,14 +55,29 @@ export default class DOMManager {
 			if (modalType == ModalType.LIST) {
 				let title = modal.querySelector("#list-title").value;
 				if (mode == Mode.CREATE) {
-					let newTodo = this.todoManager.addList(title);
-					console.log(this.todoManager.lists);
+					let newList = this.todoManager.addList(title);
+					console.log(newList);
 					this.updateListSelector();
-					this.renderTodoList(newTodo);
+					this.renderTodoList(newList);
 				} else {
 				}
 			} else {
+				let currentListID = this.todoManager.currentListID;
+
+				let title = modal.querySelector("#item-title").value;
+				let description = modal.querySelector("#item-description").value;
+				let dueDate = modal.querySelector("#item-dueDate").value;
+				let priority = modal.querySelector("#item-priority").value;
 				if (mode == Mode.CREATE) {
+					let newItem = this.todoManager.addItemToList(
+						currentListID,
+						title,
+						description,
+						dueDate,
+						priority
+					);
+					console.log(newItem);
+					this.renderTodoItem(newItem);
 				} else {
 				}
 			}
@@ -93,15 +108,17 @@ export default class DOMManager {
 		const listSelector = document.querySelector("#list_selector");
 		listSelector.innerHTML = '<option value="">Select Todo List</option>'; // Clear existing options
 
-        let currentListID = document.querySelector("#todo_list__title_list").getAttribute("data-list-id");
+		let currentListID = document
+			.querySelector("#todo_list__title_list")
+			.getAttribute("data-list-id");
 
 		this.todoManager.lists.forEach((list) => {
-            if (list.id !== currentListID) {
-                const option = document.createElement("option");
-                option.value = list.id;
-                option.textContent = list.title;
-                listSelector.appendChild(option);
-            }
+			if (list.id !== currentListID) {
+				const option = document.createElement("option");
+				option.value = list.id;
+				option.textContent = list.title;
+				listSelector.appendChild(option);
+			}
 		});
 
 		// Add an option to create a new list
@@ -116,7 +133,7 @@ export default class DOMManager {
 
 		let listTitleElem = listElem.querySelector("#todo_list__title_list");
 		listTitleElem.textContent = todoList.title;
-        listTitleElem.setAttribute("data-list-id", todoList.id)
+		listTitleElem.setAttribute("data-list-id", todoList.id);
 
 		let listItems = listElem.querySelector("#todo_list__items");
 		listItems.innerHTML = "";
@@ -141,25 +158,68 @@ export default class DOMManager {
         </svg>
         `;
 
-        // Append the add button back to the list
-        listItems.appendChild(addButton);
-        
-        addButton.addEventListener("click", () => {
+		// Append the add button back to the list
+		listItems.appendChild(addButton);
+
+		addButton.addEventListener("click", () => {
 			this.openModal(ModalType.ITEM);
 		});
 
-        todoList.items.forEach((item) => {
-            this.renderTodoItem(item)
-        })
+		todoList.items.forEach((item) => {
+			this.renderTodoItem(item);
+		});
 
-        this.updateListSelector();
+		this.updateListSelector();
 
 		console.log(`WE OPENED ${todoList.title}`);
 	}
 
 	renderTodoItem(todoItem) {
-        console.log(`We rendered ${todoItem.id}`)
-    }
+        let todoListItemsElem = document.querySelector("#todo_list__items");
+
+        let todoItemElem = document.createElement("li")
+        todoItemElem.setAttribute("class", "todo-list__item");
+
+        let isCheckedParentElem = document.createElement("div");
+        isCheckedParentElem.setAttribute("class", "todo-item__isChecked");
+
+        let isCheckedElem = document.createElement("input")
+        isCheckedElem.setAttribute("type", "checkbox");
+        isCheckedElem.setAttribute("name", "completed"); 
+        isCheckedElem.setAttribute("id", `${todoItem.id}_completed`);
+
+        isCheckedParentElem.appendChild(isCheckedElem);
+
+        todoItemElem.appendChild(isCheckedParentElem);
+
+        let titleElem = document.createElement("div");
+        titleElem.setAttribute("class", "todo-item__title");
+        titleElem.textContent = todoItem.title;
+
+        todoItemElem.appendChild(titleElem);
+
+        let dueDateElem = document.createElement("div");
+        dueDateElem.setAttribute("class", "todo-item__dueDate");
+        dueDateElem.textContent = todoItem.dueDate;
+
+        todoItemElem.appendChild(dueDateElem);
+
+        let descriptionElem = document.createElement("div");
+        descriptionElem.setAttribute("class", "todo-item__description");
+        descriptionElem.textContent = todoItem.description;
+
+        todoItemElem.appendChild(descriptionElem);
+
+        let priorityElem = document.createElement("div");
+        priorityElem.setAttribute("class", "todo-item__priority");
+        priorityElem.textContent = todoItem.priority;
+
+        todoItemElem.appendChild(priorityElem);
+
+        todoListItemsElem.appendChild(todoItemElem);
+
+		console.log(`We rendered ${todoItem.id}`);
+	}
 
 	bindEvents() {
 		let listSelector = document.querySelector("#list_selector");
@@ -168,10 +228,10 @@ export default class DOMManager {
 			let option = event.target;
 			if (option.value == -1) {
 				this.openModal(ModalType.LIST);
-			} else if (option.value != 0) {
+			} else {
 				let list = this.todoManager.findList(option.value);
 				if (list) {
-                    this.todoManager.currentListID = list.id;
+					this.todoManager.currentListID = list.id;
 					this.renderTodoList(list);
 				}
 			}

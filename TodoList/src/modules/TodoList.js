@@ -12,10 +12,23 @@ export default class TodoList {
 		this.items = [];
 	}
 
-	addItem(id, title, description, dueDate, priority) {
-		let newItem = new TodoItem(id, title, description, dueDate, priority);
+	findItem(id) {
+		let item = this.items.find((item) => {
+			return item.id == id;
+		})
+
+		if (item) {
+			return item
+		} else {
+			console.error(`List "${id}" not found!`)
+			return undefined;
+		}
+	}
+
+	addItem(title, description, dueDate, priority, id) {
+		let newItem = new TodoItem(title, description, dueDate, priority, id);
 		this.items.push(newItem);
-		return true;
+		return this.items[this.items.length - 1];
 	}
 
 	deleteItem(targetItemID) {

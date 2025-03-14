@@ -1,17 +1,17 @@
 import TodoList from "./TodoList";
+import TodoItem from "./TodoItem";
 import { v4 as uuidv4 } from "uuid";
 
 export default class TodoManager {
 	constructor() {
-		let localLists = this.loadListsFromLocalStorage();
-		// If locaLists is not found in localStorage, it will be null
-		// So - not positive this will work
-		this.lists = localLists || []; 
+		this.lists = this.loadListsFromLocalStorage();
 		this._currentListID = this.loadCurrentListIDFromLocalStorage();
+		this._currentList = this.findList(this._currentListID);
 	}
 
 	set currentListID(id) {
 		this._currentListID = id;
+		this._currentList = this.findList(id);
 		this.saveCurrentListIDToLocalStorage();
 	}
 
@@ -19,15 +19,25 @@ export default class TodoManager {
 		return this._currentListID;
 	}
 
+	set currentList(list) {
+		this._currentList = list;
+		this._currentListID = list.id;
+		this.saveCurrentListIDToLocalStorage();
+	}
+
+	get currentList() {
+		return this._currentList;
+	}
+
 	findList(id) {
 		let list = this.lists.find((list) => {
 			return list.id == id;
-		})
+		});
 
 		if (list) {
-			return list
+			return list;
 		} else {
-			console.error(`List "${id}" not found!`)
+			console.error(`List "${id}" not found!`);
 			return undefined;
 		}
 	}
@@ -49,8 +59,23 @@ export default class TodoManager {
 	}
 
 	moveItem(targetItem, currentList, targetList) {
-		this.addItem(targetItem, targetList);
-		this.deleteItem(targetItem, currentList);
+		this.addItemToList(targetList, targetItem.title, targetItem.description, targetItem.dueDate, targetItem.priority, targetItem.id);
+		this.deleteItemFromList(currentList, targetItem.id);
+	}
+
+	addItemToList(listID, title, description, dueDate, priority, id) {
+		let targetList = this.findList(listID);
+		let newItem = targetList.addItem(title, description, dueDate, priority, id);
+		this.saveListsToLocalStorage();
+		return newItem;
+	}
+
+	deleteItemFromList(listID, itemID) {
+		let targetList = this.findList(listID);
+		targetList = targetList.filter((todoItem) => {
+			return todoItem.id != itemID
+		})
+		this.saveListsToLocalStorage();
 	}
 
 	saveListsToLocalStorage() {
@@ -63,11 +88,21 @@ export default class TodoManager {
 
 	loadListsFromLocalStorage() {
 		const lists = localStorage.getItem("todoLists");
-		return lists ? JSON.parse(lists) : [];
+		if (lists) {
+            const parsedLists = JSON.parse(lists);
+            return parsedLists.map(listData => {
+                const todoList = new TodoList(listData.id, listData.title);
+                todoList.items = listData.items.map(itemData => {
+                    return new TodoItem(itemData.title, itemData.description, itemData.dueDate, itemData.priority, itemData.id);
+                });
+                return todoList;
+            });
+        }
+        return [new TodoList("0", "Default List")];
 	}
 
 	loadCurrentListIDFromLocalStorage() {
 		const currentListID = localStorage.getItem("currentTodoList");
-		return currentListID ? JSON.parse(currentListID) : 0;
+		return currentListID ? JSON.parse(currentListID) : "0";
 	}
 }
