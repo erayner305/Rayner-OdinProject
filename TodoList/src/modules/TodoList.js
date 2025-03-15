@@ -26,7 +26,7 @@ export default class TodoList {
 	}
 
 	addItem(title, description, dueDate, priority, id) {
-		let newItem = new TodoItem(title, description, dueDate, priority, id);
+		let newItem = new TodoItem(title, description, dueDate, priority, false, id);
 		this.items.push(newItem);
 		return this.items[this.items.length - 1];
 	}

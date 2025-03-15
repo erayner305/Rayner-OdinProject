@@ -28,16 +28,18 @@ export default class DOMManager {
 		let mode = data ? Mode.UPDATE : Mode.CREATE;
 
 		let cancelBtn = modal.querySelector("#modal-cancel");
-		cancelBtn.addEventListener("click", (event) => {
+		const cancelHandler = (event) => {
 			this.closeModal(event.target.closest(".modal"));
-		});
+			cancelBtn.removeEventListener("click", cancelHandler);
+		};
+		cancelBtn.addEventListener("click", cancelHandler);
 
 		let saveBtn = modal.querySelector(`#${modalType}-save`);
-		saveBtn.addEventListener("click", (event) => {
-			// probably need a function to gather all the data here
-			// will call TodoManager.addList or TodoManager.lists[x].addItem
+		const saveHandler = (event) => {
 			this.saveModal(event.target.closest(".modal"), modalType, mode);
-		});
+			saveBtn.removeEventListener("click", saveHandler);
+		};
+		saveBtn.addEventListener("click", saveHandler);
 
 		modal.showModal();
 	}
@@ -169,54 +171,64 @@ export default class DOMManager {
 			this.renderTodoItem(item);
 		});
 
+		this.todoManager.currentListID = todoList.id;
 		this.updateListSelector();
 
 		console.log(`WE OPENED ${todoList.title}`);
 	}
 
 	renderTodoItem(todoItem) {
-        let todoListItemsElem = document.querySelector("#todo_list__items");
+		let todoListItemsElem = document.querySelector("#todo_list__items");
 
-        let todoItemElem = document.createElement("li")
-        todoItemElem.setAttribute("class", "todo-list__item");
+		let todoItemElem = document.createElement("li");
+		todoItemElem.setAttribute("class", "todo-list__item");
 
-        let isCheckedParentElem = document.createElement("div");
-        isCheckedParentElem.setAttribute("class", "todo-item__isChecked");
+		let isCheckedParentElem = document.createElement("div");
+		isCheckedParentElem.setAttribute("class", "todo-item__isChecked");
 
-        let isCheckedElem = document.createElement("input")
-        isCheckedElem.setAttribute("type", "checkbox");
-        isCheckedElem.setAttribute("name", "completed"); 
-        isCheckedElem.setAttribute("id", `${todoItem.id}_completed`);
+		let isCheckedElem = document.createElement("input");
+		isCheckedElem.setAttribute("type", "checkbox");
+		isCheckedElem.setAttribute("name", "completed");
+		isCheckedElem.setAttribute("id", `${todoItem.id}_completed`);
+		isCheckedElem.checked = todoItem.isChecked;
 
-        isCheckedParentElem.appendChild(isCheckedElem);
+		isCheckedParentElem.appendChild(isCheckedElem);
 
-        todoItemElem.appendChild(isCheckedParentElem);
+		todoItemElem.appendChild(isCheckedParentElem);
 
-        let titleElem = document.createElement("div");
-        titleElem.setAttribute("class", "todo-item__title");
-        titleElem.textContent = todoItem.title;
+		isCheckedElem.addEventListener("click", (event) => {
+			this.todoManager.setItemIsChecked(
+				this.todoManager.currentListID,
+				todoItem.id,
+				event.target.checked
+			);
+		});
 
-        todoItemElem.appendChild(titleElem);
+		let titleElem = document.createElement("div");
+		titleElem.setAttribute("class", "todo-item__title");
+		titleElem.textContent = todoItem.title;
 
-        let dueDateElem = document.createElement("div");
-        dueDateElem.setAttribute("class", "todo-item__dueDate");
-        dueDateElem.textContent = todoItem.dueDate;
+		todoItemElem.appendChild(titleElem);
 
-        todoItemElem.appendChild(dueDateElem);
+		let dueDateElem = document.createElement("div");
+		dueDateElem.setAttribute("class", "todo-item__dueDate");
+		dueDateElem.textContent = todoItem.dueDate;
 
-        let descriptionElem = document.createElement("div");
-        descriptionElem.setAttribute("class", "todo-item__description");
-        descriptionElem.textContent = todoItem.description;
+		todoItemElem.appendChild(dueDateElem);
 
-        todoItemElem.appendChild(descriptionElem);
+		let descriptionElem = document.createElement("div");
+		descriptionElem.setAttribute("class", "todo-item__description");
+		descriptionElem.textContent = todoItem.description;
 
-        let priorityElem = document.createElement("div");
-        priorityElem.setAttribute("class", "todo-item__priority");
-        priorityElem.textContent = todoItem.priority;
+		todoItemElem.appendChild(descriptionElem);
 
-        todoItemElem.appendChild(priorityElem);
+		let priorityElem = document.createElement("div");
+		priorityElem.setAttribute("class", "todo-item__priority");
+		priorityElem.textContent = todoItem.priority;
 
-        todoListItemsElem.appendChild(todoItemElem);
+		todoItemElem.appendChild(priorityElem);
+
+		todoListItemsElem.appendChild(todoItemElem);
 
 		console.log(`We rendered ${todoItem.id}`);
 	}

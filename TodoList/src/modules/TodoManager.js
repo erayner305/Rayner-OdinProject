@@ -65,7 +65,7 @@ export default class TodoManager {
 
 	addItemToList(listID, title, description, dueDate, priority, id) {
 		let targetList = this.findList(listID);
-		let newItem = targetList.addItem(title, description, dueDate, priority, id);
+		let newItem = targetList.addItem(title, description, dueDate, priority, id || uuidv4());
 		this.saveListsToLocalStorage();
 		return newItem;
 	}
@@ -75,6 +75,13 @@ export default class TodoManager {
 		targetList = targetList.filter((todoItem) => {
 			return todoItem.id != itemID
 		})
+		this.saveListsToLocalStorage();
+	}
+
+	setItemIsChecked(listID, itemID, isChecked) {
+		let targetList = this.findList(listID);
+		let targetItem = targetList.findItem(itemID);
+		targetItem.isChecked = isChecked;
 		this.saveListsToLocalStorage();
 	}
 
@@ -93,16 +100,16 @@ export default class TodoManager {
             return parsedLists.map(listData => {
                 const todoList = new TodoList(listData.id, listData.title);
                 todoList.items = listData.items.map(itemData => {
-                    return new TodoItem(itemData.title, itemData.description, itemData.dueDate, itemData.priority, itemData.id);
+                    return new TodoItem(itemData.title, itemData.description, itemData.dueDate, itemData.priority, itemData.isChecked, itemData.id);
                 });
                 return todoList;
             });
         }
-        return [new TodoList("0", "Default List")];
+        return [new TodoList(uuidv4(), "Default List")];
 	}
 
 	loadCurrentListIDFromLocalStorage() {
 		const currentListID = localStorage.getItem("currentTodoList");
-		return currentListID ? JSON.parse(currentListID) : "0";
+		return currentListID ? JSON.parse(currentListID) : this.lists[0].id;
 	}
 }
