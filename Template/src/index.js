@@ -1,3 +1,9 @@
 import "./style.css";
 
-let me = 1;
+class App {
+    constructor() {
+        
+    }
+}
+
+new App();
