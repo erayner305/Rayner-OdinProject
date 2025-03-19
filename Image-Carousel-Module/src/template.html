@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div class="carousel-wrapper">
+			<button id="carousel-arrow-left" class="carousel-arrow">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="size-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+					/>
+				</svg>
+			</button>
+			<img
+				id="carousel-image"
+				class="carousel-images"
+				src="./images/img1.jpg"
+				alt=""
+			/>
+			<button id="carousel-arrow-right" class="carousel-arrow">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="size-6"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+					/>
+				</svg>
+			</button>
+
+			<div class="carousel-nav-dots">
+				<div data-rank="-2" class="nav-dot"></div>
+				<div data-rank="-1" class="nav-dot"></div>
+				<div data-rank="0" class="nav-dot active"></div>
+				<div data-rank="1" class="nav-dot"></div>
+				<div data-rank="2" class="nav-dot"></div>
+			</div>
+		</div>
+	</body>
+</html>
