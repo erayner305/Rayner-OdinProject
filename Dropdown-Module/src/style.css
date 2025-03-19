@@ -1,0 +1,52 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+
+    .dropdown-button {
+        box-sizing: border-box;
+        height: 32px;
+        width: 32px;
+        cursor: pointer;
+        border-radius: 4px;
+    
+        &:hover {
+            border: 1px solid black;
+        }
+    
+        > * {
+            vertical-align: middle;
+            pointer-events: none;
+        }
+    }
+    
+    ul.dropdown-menu {
+        width: fit-content;
+        padding: 0;
+        margin: 0;
+        position: fixed; /* Change to fixed for viewport-relative positioning */
+        z-index: 1000;
+        border: 1px solid gray;
+        border-radius: 4px;
+        background-color: white;
+        display: none;
+    
+        &.show {
+            display: block;
+        }
+    
+        li {
+            list-style: none;
+            cursor: default;
+            padding: 5px 10px;
+            &:hover {
+                background-color: lightblue;
+            }
+        }
+    }
+}
+
+
