@@ -1,0 +1,66 @@
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+}
+
+.carousel-wrapper {
+	height: 80vh;
+	aspect-ratio: 3/2;
+
+	display: grid;
+	justify-content: center;
+	align-items: center;
+
+    grid-template-rows: 95% 1fr; 
+
+	background-color: lightslategray;
+	border-radius: 4px;
+
+    .carousel-arrow {
+        height: 50px;
+        width: 50px;
+
+        background: none;
+        border: none;
+
+        cursor: pointer;
+
+        color: whitesmoke;
+
+        &#carousel-arrow-left {
+            justify-self: end;
+        }
+    }
+
+	.carousel-images {
+        height: 95%;
+        aspect-ratio: 4/3;
+        border-radius: 4px;
+	}
+
+    .carousel-nav-dots {
+        grid-column: span 3;
+        align-self: flex-start;
+
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 12px;
+
+        .nav-dot {
+            height: 16px;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            
+            background-color: whitesmoke;
+        }
+
+        .active {
+            border: 2px solid black;
+            height: 18px;
+        }
+    }
+}
