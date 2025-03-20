@@ -110,17 +110,28 @@ submitBookButton.addEventListener("click", (event) => {
 	event.preventDefault();
 
 	const formElements = newBookDialogue.querySelectorAll("input");
-	const title = formElements[0].value;
-	const author = formElements[1].value;
-	const pages = formElements[2].value;
-	const isRead = formElements[3].checked;
+	let isInputValid = true;
+	formElements.forEach((inputElem) => {
+		if(inputElem.validity.valueMissing) {
+			console.error(`INVALID ENTRY AT ${inputElem.id}`);
+			alert(`Invalid entry at ${inputElem.id}`)
+			isInputValid = false
+		}
+	})
 
-	const newBook = new Book(title, author, pages, isRead);
-	addBookToLibrary(newBook);
-	addBookToLibraryTable(newBook, myLibrary.length - 1);
-
-	newBookDialogue.close();
-	newBookForm.reset();
+	if (isInputValid) {
+		const title = formElements[0].value;
+		const author = formElements[1].value;
+		const pages = formElements[2].value;
+		const isRead = formElements[3].checked;
+	
+		const newBook = new Book(title, author, pages, isRead);
+		addBookToLibrary(newBook);
+		addBookToLibraryTable(newBook, myLibrary.length - 1);
+	
+		newBookDialogue.close();
+		newBookForm.reset();
+	}
 });
 
 // Creating four books
