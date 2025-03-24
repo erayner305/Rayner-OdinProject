@@ -13,6 +13,7 @@ class App {
 		];
 
 		this.renderWeatherData();
+        this.bindEvents();
 	}
 
 	async fetchWeatherData(zipCode) {
@@ -24,9 +25,10 @@ class App {
 		return responseJSON.currentConditions;
 	}
 
-	async renderWeatherData() {
+	async renderWeatherData(zipCode = 36830) {
         let weatherDataContainer = document.querySelector(".weather-data");
-		let weatherData = await this.fetchWeatherData(36830);
+        weatherDataContainer.innerHTML = '';
+		let weatherData = await this.fetchWeatherData(zipCode);
 
 		// Cleans unused keys from response weather data
 		// const filteredWeatherData = Object.keys(weatherData)
@@ -63,11 +65,14 @@ class App {
     
 	}
 
-    updateUIWithWeatherData() {
-        const weatherDataContainer = document.querySelector(".weather-data");
-        weatherDataContainer.innerHTML = `
-            <div></div>
-        `
+    bindEvents() {
+        let zipElem = document.querySelector("#zip");
+        zipElem.addEventListener("input", (event)=> {
+            let textInput = event.target.value;
+            if (textInput.length == 5) {
+                this.renderWeatherData(parseInt(textInput))
+            }
+        })
     }
 }
 

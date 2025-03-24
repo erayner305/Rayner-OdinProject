@@ -26,7 +26,13 @@ body {
     > h1 {
         align-self: center;
         justify-self: center;
+        align-items: center;
         font-size: 2em;
+
+        #zip {
+            font-size: 1.5rem;
+            width: 6ch;
+        }
     }
 
     .weather-data {
@@ -35,12 +41,13 @@ body {
         border-radius: 12px;
 
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
         gap: 10px;
 
         .weather-data-block {
             display: flex;
             flex-direction: column;
+            min-height: 275px;
 
             background-color: rgb(190, 193, 209);
             border-radius: 12px;
