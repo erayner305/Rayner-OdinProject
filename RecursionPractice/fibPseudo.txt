@@ -1,0 +1,5 @@
+Base Case:
+When N = 0, X = 0; When N = 1, X = 1; 
+
+Recursive Case:
+When N > 1, X = (N - 1) + (N - 2)

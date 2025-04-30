@@ -1,0 +1,5 @@
+Base Case:
+Array of size 1
+
+Recursive Case:
+Split array in half

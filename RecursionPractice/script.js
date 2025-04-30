@@ -158,7 +158,7 @@ function fibs(n) {
     let current = 0;
     let output = [0];
 
-    for(let i = 1; i < n; i++) {
+    for(let i = 1; i <= n; i++) {
         if (i == 1) {
             current = 1;
         } else {
@@ -173,10 +173,26 @@ function fibs(n) {
     return output;
 }
 
-console.log(fibs(8))
+console.log(fibs(15))
 
-function fibsRecursive() {
+let outputArray = [];
 
+function fibsRecursive(n) {
+    if (n == 0 || n == 1) {
+        return n
+    } else {
+        return fibsRecursive(n - 1) + fibsRecursive(n - 2);
+    }
 }
+
+function displayFib(n) {
+    for (let i = 0; i <= n; i++) {
+        outputArray.push(fibsRecursive(i))
+    }
+
+    return outputArray
+}
+
+console.log(displayFib(15));
 
 
